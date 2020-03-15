@@ -24,6 +24,7 @@ beforeEach(() => {
 });
 
 test("renders loading message before api call sets data", async () => {
+  // need to wrap in act because useEffect updates the state
   await act(async () => {
     const { getByText } = render(<PokemonList />);
     const linkElement = getByText(/pokemon loading/i);
@@ -32,12 +33,22 @@ test("renders loading message before api call sets data", async () => {
 });
 
 test("renders results from api call", async () => {
-  //const { debug } = render(<PokemonList />);
-  const { getByText, debug } = render(<PokemonList />);
+  const { getByText, getAllByTestId } = render(<PokemonList />);
 
   await waitForElementToBeRemoved(() => {
     return getByText(/pokemon loading/i);
   });
+  // get the text content from the items because we are going to test the order too
+  const itemList = getAllByTestId("pokemon-item").map(li => li.textContent);
+  expect(itemList).toHaveLength(3);
+  // prettier adds in the training , toMatchInlineSnapshot
+  expect(itemList).toMatchInlineSnapshot(`
+    Array [
+      "example one",
+      "example two",
+      "example three",
+    ]
+  `);
+
   // ok so after the act/wait for element we can see the changed render
-  debug();
 });

@@ -16,7 +16,11 @@ export default function PokemonList() {
       <h1>Pokemon List</h1>
       <ul>
         {list.length > 0 ? (
-          list.map((pokemon, index) => <li key={index + pokemon}>{pokemon}</li>)
+          list.map((pokemon, index) => (
+            <li key={index + pokemon} data-testid="pokemon-item">
+              {pokemon}
+            </li>
+          ))
         ) : (
           <li>pokemon loading</li>
         )}
